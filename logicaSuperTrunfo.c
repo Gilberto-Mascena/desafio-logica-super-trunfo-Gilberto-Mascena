@@ -50,26 +50,41 @@ int cadastrarCidade(Cidade **cidades)
         printf("\nCadastro da cidade #%d:\n", i + 1);
         printf("Digite o código da cidade: ");
         scanf("%9s", (*cidades)[i].codigo); // Limita a entrada a 9 caracteres
+
         printf("Digite o nome da cidade: ");
-        scanf("%49s", (*cidades)[i].nome); // Limita a entrada a 49 caracteres
+        while (getchar() != '\n'); // Limpa o buffer de entrada        
+        fgets((*cidades)[i].nome, sizeof((*cidades)[i].nome), stdin); // Lê a string com espaços
+        (*cidades)[i].nome[strcspn((*cidades)[i].nome, "\n")] = 0; // Remove o caractere de nova linha     
+
         printf("Digite a população da cidade: ");
         scanf("%d", &(*cidades)[i].populacao);
+        while (getchar() != '\n'); // Limpa o buffer de entrada
+
         printf("Digite a área da cidade (em km²): ");
         scanf("%f", &(*cidades)[i].area);
+
         printf("Digite o PIB da cidade: ");
         scanf("%f", &(*cidades)[i].pib);
+                
+        // // Calculando a densidade populacional programaticamente
+        // (*cidades)[i].densidadePopulacional = (*cidades)[i].populacao / (*cidades)[i].area;
+        // printf("Densidade populacional calculada: %.2f\n", (*cidades)[i].densidadePopulacional);
+        
+        while (getchar() != '\n'); // Limpa o buffer de entrada
         printf("Digite a densidade populacional da cidade: ");
         scanf("%f", &(*cidades)[i].densidadePopulacional);
+        while (getchar() != '\n'); // Limpa o buffer de entrada
         printf("Digite o PIB per capita da cidade: ");
         scanf("%f", &(*cidades)[i].pibPerCapita);
+        while (getchar() != '\n'); // Limpa o buffer de entrada
     }
     return numCidades; // Retorna o número de cidades cadastradas
 }
 
 int main()
 {
-    
-    Cidade *cidades = NULL; // Ponteiro para o vetor de cidades
+
+    Cidade *cidades = NULL;                     // Ponteiro para o vetor de cidades
     int numCidades = cadastrarCidade(&cidades); // Chama a função para cadastrar cidades e armazena o número de cidades cadastradas
 
     // Exibição dos dados cadastrados
@@ -86,30 +101,41 @@ int main()
         printf("PIB per Capita: %.2f\n", cidades[i].pibPerCapita);
     }
 
-    /*
-     Liberação da memória alocada pela lista de cidades
-     Após o uso, é importante liberar a memória alocada para evitar vazamentos de memória.
-     Utilize a função free() para liberar a memória alocada para o vetor de cidades.
-     */
+    // Exibição de comparações entre cidades
+    printf("\n-------------Comparação de Cidades--------------\n");
+    printf("\n");
+
+    // Comparando a densidade populacional
+    int i = 0, j = 1; // Definindo índices para as cidades a serem comparadas
+
+    if (cidades[i].densidadePopulacional > cidades[j].densidadePopulacional)
+    {
+        printf("A cidade %s, tem maior densidade populacional que a cidade %s\n", cidades[i].nome, cidades[j].nome);
+    }
+    else
+    {
+        printf("A cidade %s, tem menor densidade populacional que a cidade %s\n", cidades[i].nome, cidades[j].nome);
+    }
+    
+    // Comparando o PIB per capita
+    if (cidades[i].pibPerCapita > cidades[j].pibPerCapita)
+    {
+        printf("A cidade %s, tem maior PIB per capita que a cidade %s\n", cidades[i].nome, cidades[j].nome);
+    }
+    else
+    {
+        printf("A cidade %s, tem menor PIB per capita que a cidade %s\n", cidades[i].nome, cidades[j].nome);
+    }
+
+    // Determinando a cidade vencedora com base no PIB per capita
+    char *cidadeVencedora = (cidades[i].pibPerCapita > cidades[j].pibPerCapita) ? cidades[i].nome : cidades[j].nome;
+
+    // Exibição dos resultados
+    printf("\nA cidade vencedora é: %s, parabéns!\n", cidadeVencedora); // Exibe a cidade vencedora
+    printf("\n");
+
+    // Liberando a memória alocada
     free(cidades);
-
-    // Comparação de Cartas:
-    // Desenvolva a lógica de comparação entre duas cartas.
-    // Utilize estruturas de decisão como if, if-else para comparar atributos como população, área, PIB, etc.
-
-    // Exemplo:
-    // if (populacaoA > populacaoB) {
-    //     printf("Cidade 1 tem maior população.\n");
-    // } else {
-    //     printf("Cidade 2 tem maior população.\n");
-    // }
-
-    // Exibição dos Resultados:
-    // Após realizar as comparações, exiba os resultados para o usuário.
-    // Certifique-se de que o sistema mostre claramente qual carta venceu e com base em qual atributo.
-
-    // Exemplo:
-    // printf("A cidade vencedora é: %s\n", cidadeVencedora);
 
     return 0;
 }
